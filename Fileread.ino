@@ -1,9 +1,12 @@
 #include <SD.h>					//SD card library
 #include <SPI.h>
+#include <QueueList.h>
 
 File myfile;
 
-
+struct DayShedule {
+	QueueList<int> hour;
+};
 
 void setup()
 {
