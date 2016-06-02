@@ -6,7 +6,20 @@ File myfile;
 
 struct DayShedule {
 	QueueList<int> hour;
+	QueueList<int> minute;
+	QueueList<String> command;
 };
+
+DayShedule Sunday;
+DayShedule Monday;
+DayShedule Tuesday;
+DayShedule Wednesday;
+DayShedule Thursday;
+DayShedule Friday;
+DayShedule Saturday;
+DayShedule Weekday;
+DayShedule Weekend;
+DayShedule Everyday;
 
 void setup()
 {
@@ -85,11 +98,12 @@ void readFile()
 			{
 				parseString(line);
 				line = "";
+				Serial.print("The amount of RAM left: ");
+				Serial.println(freeRam());
 			}
 		}
 		// close the file:
 		myfile.close();
-		while (1);
 	}
 	else
 	{
@@ -101,7 +115,7 @@ void readFile()
 
 void parseString(String input)
 {
-	int hour, minute, day;
+	int hour = 0, minute = 0, day = 0;
 	String command;
 	//const char *line = input.c_str();
 	char delimit[] = " :”“\",\r\n";
@@ -114,10 +128,10 @@ void parseString(String input)
 	int i = 0;
 	while (token != NULL)
 	{
-		Serial.println(token);
+		//Serial.println(token);
 		delay(10);
-		Serial.print("i is ");
-		Serial.println(i);
+		//Serial.print("i is ");
+		//Serial.println(i);
 		if (i == 0)
 		{
 			hour = atoi(token);
@@ -142,12 +156,94 @@ void parseString(String input)
 
 void structify(int hour, int minute, String command, int day)
 {
-	int i = 0;
-	i++;
+	/*Serial.print("Day is: ");
+	Serial.println(day);
+	Serial.print("Hour is: ");
+	Serial.println(hour);
+	Serial.print("Minute is: ");
+	Serial.println(minute);*/
+	switch (day) {
+	case 0:
+		//Sunday
+		Sunday.hour.push(hour);
+		Sunday.minute.push(minute);
+		Sunday.command.push(command);
+		break;
+	case 1:
+		//Monday
+		Monday.hour.push(hour);
+		Monday.minute.push(minute);
+		Monday.command.push(command);
+		break;
+	case 2:
+		//Tuesday
+		Tuesday.hour.push(hour);
+		Tuesday.minute.push(minute);
+		Tuesday.command.push(command);
+		break;
+	case 3:
+		//Wednesday
+		Wednesday.hour.push(hour);
+		Wednesday.minute.push(minute);
+		Wednesday.command.push(command);
+		break;
+	case 4:
+		//Thursday
+		Thursday.hour.push(hour);
+		Thursday.minute.push(minute);
+		Thursday.command.push(command);
+		break;
+	case 5:
+		//Friday
+		Friday.hour.push(hour);
+		Friday.minute.push(minute);
+		Friday.command.push(command);
+		break;
+	case 6:
+		//Saturday
+		Saturday.hour.push(hour);
+		Saturday.minute.push(minute);
+		Saturday.command.push(command);
+		break;
+	case 97:
+		//Weekends
+		Weekend.hour.push(hour);
+		Weekend.minute.push(minute);
+		Weekend.command.push(command);
+		break;
+	case 98:
+		//Weekdays
+		Weekday.hour.push(hour);
+		Weekday.minute.push(minute);
+		Weekday.command.push(command);
+		break;
+	case 99:
+		//Everyday
+		Everyday.hour.push(hour);
+		Everyday.minute.push(minute);
+		Everyday.command.push(command);
+		break;
+	}
+}
+
+int freeRam() {
+	extern int __heap_start, *__brkval;
+	int v;
+	return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
 }
 
 void loop()
 {
 	readFile();
+	Serial.println(Everyday.command.isEmpty());
+	while (!Everyday.command.isEmpty())
+	{
+		Serial.print("Command: ");
+		Serial.println(Everyday.command.pop());
+		Serial.print("Hour: ");
+		Serial.println(Everyday.hour.pop());
+		Serial.print("Minute: ");
+		Serial.println(Everyday.minute.pop());
+	}
 	while (1);
 }
